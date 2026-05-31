@@ -1,0 +1,6 @@
+{
+  "name": "Cognitive Nexus",
+  "description": "A multi-screen AI Chatbot assistant aggregator with beautiful glassmorphism style and a central chat feed.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
