@@ -4,7 +4,7 @@ import {
 } from "lucide-react";
 
 import { ScreenType, Message, UserProfile } from "./types";
-import { INITIAL_USER_PROFILE, BOT_INITIAL_MESSAGES, BOTS } from "./data";
+import { INITIAL_USER_PROFILE, BOT_INITIAL_MESSAGES } from "./data";
 
 import DiscoverScreen from "./components/DiscoverScreen";
 import ChatScreen from "./components/ChatScreen";
@@ -57,16 +57,6 @@ export default function App() {
         ),
       }));
     }
-  };
-
-  const handleUpdateMessage = (botId: string, messageId: string, newContent: string) => {
-    setConversations(prev => {
-      const existing = prev[botId] || [];
-      return {
-        ...prev,
-        [botId]: existing.map(m => m.id === messageId ? { ...m, content: newContent } : m),
-      };
-    });
   };
 
   const handleRemoveMessage = (botId: string, messageId: string) => {
@@ -158,7 +148,6 @@ export default function App() {
             messages={conversations[selectedBotId] || []}
             onAddMessage={(msg) => handleAddMessage(selectedBotId, msg)}
             onClearHistory={() => handleClearHistory(selectedBotId)}
-            onUpdateMessage={(msgId, content) => handleUpdateMessage(selectedBotId, msgId, content)}
             onRemoveMessage={(msgId) => handleRemoveMessage(selectedBotId, msgId)}
             onToggleMessageFavorite={(msgId) => handleToggleMessageFavorite(selectedBotId, msgId)}
             conversations={conversations}

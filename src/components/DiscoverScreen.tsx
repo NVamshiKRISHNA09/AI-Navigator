@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import {
-  Search, SlidersHorizontal, Star, X, Sparkles, Zap,
+  Search, Star, X, Sparkles, Zap,
 } from "lucide-react";
 import { BOTS } from "../data";
 import { Bot } from "../types";

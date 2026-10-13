@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   ArrowLeft, MoreVertical, Plus, Send, ShieldAlert, ShieldCheck, Zap,
-  Sparkles, Copy, Check, RefreshCw, Star, Trash2, X, MessageSquare,
+  Copy, Check, RefreshCw, Star, Trash2, X, MessageSquare,
 } from "lucide-react";
 import { Message } from "../types";
 import { BOTS, INSTANT_SUGGESTIONS } from "../data";
@@ -13,7 +13,6 @@ interface ChatScreenProps {
   messages: Message[];
   onAddMessage: (msg: Message) => void;
   onClearHistory?: () => void;
-  onUpdateMessage?: (msgId: string, content: string) => void;
   onRemoveMessage?: (msgId: string) => void;
   onToggleMessageFavorite?: (msgId: string) => void;
   conversations?: Record<string, Message[]>;
@@ -26,7 +25,6 @@ export default function ChatScreen({
   messages,
   onAddMessage,
   onClearHistory,
-  onUpdateMessage,
   onRemoveMessage,
   onToggleMessageFavorite,
   conversations,
@@ -129,20 +127,12 @@ export default function ChatScreen({
   };
 
   const handleRegenerate = (msg: Message, index: number) => {
-    if (onRemoveMessage) {
-      onRemoveMessage(msg.id);
-      handleSendMessage("", index - 1);
-    }
+    if (!onRemoveMessage || isThinking) return;
+    onRemoveMessage(msg.id);
+    const prevMessages = messages.slice(0, index);
+    if (prevMessages.length === 0) return;
+    handleSendMessage("", index - 1);
   };
-
-  const activeConversations = conversations
-    ? Object.entries(conversations).filter(([_, msgs]) => msgs.length > 0).map(([id, msgs]) => ({
-        botId: id,
-        bot: BOTS.find(b => b.id === id),
-        lastMessage: msgs[msgs.length - 1],
-        messageCount: msgs.length,
-      }))
-    : [];
 
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] md:h-[calc(100vh-100px)] text-on-surface font-sans select-none overflow-hidden relative">

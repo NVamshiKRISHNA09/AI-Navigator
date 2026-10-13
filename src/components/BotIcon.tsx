@@ -24,6 +24,3 @@ export function getBotIcon(iconName: string, size: string = "w-6 h-6") {
   return <IconComponent className={size} />;
 }
 
-export function getBotById(botId: string, bots: { id: string }[]): any {
-  return bots.find((b: any) => b.id === botId);
-}
