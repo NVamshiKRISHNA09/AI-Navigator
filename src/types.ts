@@ -5,14 +5,16 @@ export interface Bot {
   name: string;
   description: string;
   longDescription?: string;
-  avatarUrl?: string; // If not provided, we will render a fallback icon styled beautifully
-  icon: string; // Lucide icon name, or Material symbols icon name
+  capabilities?: string[];
+  icon: string;
   category: string;
   tags?: string[];
   trending?: boolean;
-  highlightBorder?: string; // Tailwind border styling
-  avatarBg?: string; // Tailwind background color styling for the icon bubble
-  iconColor?: string; // Text color styling for the icon
+  isNew?: boolean;
+  highlightBorder?: string;
+  avatarBg?: string;
+  iconColor?: string;
+  accentColor?: string;
 }
 
 export interface Message {
@@ -20,6 +22,13 @@ export interface Message {
   role: "user" | "model";
   content: string;
   timestamp: string;
+  isFavorite?: boolean;
+}
+
+export interface BotUsageStat {
+  botId: string;
+  messageCount: number;
+  lastUsed: string | null;
 }
 
 export interface UserProfile {
@@ -30,9 +39,15 @@ export interface UserProfile {
   queriesThisMonth: number;
   maxQueries: number;
   subscriptionRenewal: string;
+  joinDate: string;
+  totalConversations: number;
+  favoriteBots: string[];
+  botUsageStats: BotUsageStat[];
   preferences: {
     darkMode: boolean;
     hapticFeedback: boolean;
     saveChatHistory: boolean;
+    soundEffects: boolean;
+    compactMode: boolean;
   };
 }
