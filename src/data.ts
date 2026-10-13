@@ -11,10 +11,10 @@ export const BOTS: Bot[] = [
     category: "Productivity",
     tags: ["New", "Logic"],
     trending: true,
-    highlightBorder: "border-primary/40",
-    avatarBg: "bg-primary-container/20",
-    iconColor: "text-primary",
-    accentColor: "#5b9fff"
+    highlightBorder: "border-t-black",
+    avatarBg: "bg-black/5",
+    iconColor: "text-black",
+    accentColor: "#000000"
   },
   {
     id: "creative-muse",
@@ -26,10 +26,10 @@ export const BOTS: Bot[] = [
     category: "Creative",
     tags: ["Popular", "Art"],
     trending: true,
-    highlightBorder: "border-[#10a37f]/40",
-    avatarBg: "bg-teal-500/10",
-    iconColor: "text-teal-400",
-    accentColor: "#10a37f"
+    highlightBorder: "border-t-zinc-700",
+    avatarBg: "bg-zinc-800/5",
+    iconColor: "text-zinc-800",
+    accentColor: "#27272a"
   },
   {
     id: "dev-bot-x",
@@ -41,10 +41,10 @@ export const BOTS: Bot[] = [
     category: "Coding",
     tags: ["Top Rated", "Code"],
     trending: true,
-    highlightBorder: "border-[#3b82f6]/40",
-    avatarBg: "bg-blue-500/10",
-    iconColor: "text-blue-400",
-    accentColor: "#3b82f6"
+    highlightBorder: "border-t-gray-800",
+    avatarBg: "bg-gray-800/5",
+    iconColor: "text-gray-800",
+    accentColor: "#1f2937"
   },
   {
     id: "math-wizard",
@@ -56,10 +56,10 @@ export const BOTS: Bot[] = [
     category: "Math",
     tags: ["Education", "Algebra"],
     trending: false,
-    highlightBorder: "border-violet-500/40",
-    avatarBg: "bg-violet-500/10",
-    iconColor: "text-violet-400",
-    accentColor: "#a78bfa"
+    highlightBorder: "border-t-neutral-700",
+    avatarBg: "bg-neutral-800/5",
+    iconColor: "text-neutral-700",
+    accentColor: "#404040"
   },
   {
     id: "grammar-pro",
@@ -71,10 +71,10 @@ export const BOTS: Bot[] = [
     category: "Productivity",
     tags: ["Writing", "Editing"],
     trending: false,
-    highlightBorder: "border-zinc-500/40",
-    avatarBg: "bg-zinc-500/10",
-    iconColor: "text-zinc-400",
-    accentColor: "#a1a1aa"
+    highlightBorder: "border-t-stone-600",
+    avatarBg: "bg-stone-700/5",
+    iconColor: "text-stone-600",
+    accentColor: "#57534e"
   },
   {
     id: "fitness-ai",
@@ -86,10 +86,10 @@ export const BOTS: Bot[] = [
     category: "Lifestyle",
     tags: ["Health", "Coaching"],
     trending: false,
-    highlightBorder: "border-emerald-500/40",
-    avatarBg: "bg-emerald-500/10",
-    iconColor: "text-emerald-400",
-    accentColor: "#34d399"
+    highlightBorder: "border-t-emerald-700",
+    avatarBg: "bg-emerald-800/5",
+    iconColor: "text-emerald-700",
+    accentColor: "#047857"
   },
   {
     id: "bug-hunter",
@@ -101,10 +101,10 @@ export const BOTS: Bot[] = [
     category: "Coding",
     tags: ["Security", "Audit"],
     trending: false,
-    highlightBorder: "border-rose-500/40",
-    avatarBg: "bg-rose-500/10",
-    iconColor: "text-rose-400",
-    accentColor: "#fb7185"
+    highlightBorder: "border-t-red-700",
+    avatarBg: "bg-red-800/5",
+    iconColor: "text-red-700",
+    accentColor: "#b91c1c"
   },
   {
     id: "lingua-flow",
@@ -117,10 +117,10 @@ export const BOTS: Bot[] = [
     tags: ["New", "Languages"],
     trending: true,
     isNew: true,
-    highlightBorder: "border-cyan-500/40",
-    avatarBg: "bg-cyan-500/10",
-    iconColor: "text-cyan-400",
-    accentColor: "#22d3ee"
+    highlightBorder: "border-t-sky-700",
+    avatarBg: "bg-sky-800/5",
+    iconColor: "text-sky-700",
+    accentColor: "#0369a1"
   },
   {
     id: "data-sage",
@@ -133,10 +133,10 @@ export const BOTS: Bot[] = [
     tags: ["New", "Data"],
     trending: true,
     isNew: true,
-    highlightBorder: "border-amber-500/40",
-    avatarBg: "bg-amber-500/10",
-    iconColor: "text-amber-400",
-    accentColor: "#fbbf24"
+    highlightBorder: "border-t-amber-700",
+    avatarBg: "bg-amber-800/5",
+    iconColor: "text-amber-700",
+    accentColor: "#b45309"
   },
   {
     id: "mind-guide",
@@ -149,10 +149,10 @@ export const BOTS: Bot[] = [
     tags: ["Wellness", "Mindfulness"],
     trending: false,
     isNew: true,
-    highlightBorder: "border-pink-500/40",
-    avatarBg: "bg-pink-500/10",
-    iconColor: "text-pink-400",
-    accentColor: "#f472b6"
+    highlightBorder: "border-t-rose-700",
+    avatarBg: "bg-rose-800/5",
+    iconColor: "text-rose-700",
+    accentColor: "#be123c"
   },
   {
     id: "story-weaver",
@@ -165,10 +165,10 @@ export const BOTS: Bot[] = [
     tags: ["New", "Stories"],
     trending: false,
     isNew: true,
-    highlightBorder: "border-orange-500/40",
-    avatarBg: "bg-orange-500/10",
-    iconColor: "text-orange-400",
-    accentColor: "#fb923c"
+    highlightBorder: "border-t-orange-700",
+    avatarBg: "bg-orange-800/5",
+    iconColor: "text-orange-700",
+    accentColor: "#c2410c"
   },
   {
     id: "chef-ai",
@@ -181,10 +181,10 @@ export const BOTS: Bot[] = [
     tags: ["Cooking", "Recipes"],
     trending: false,
     isNew: true,
-    highlightBorder: "border-yellow-500/40",
-    avatarBg: "bg-yellow-500/10",
-    iconColor: "text-yellow-400",
-    accentColor: "#facc15"
+    highlightBorder: "border-t-yellow-700",
+    avatarBg: "bg-yellow-800/5",
+    iconColor: "text-yellow-700",
+    accentColor: "#a16207"
   }
 ];
 

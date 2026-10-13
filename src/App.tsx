@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
-  Menu, Compass, MessageSquare, User as UserIcon, Sparkles,
+  Compass, MessageSquare, User as UserIcon,
 } from "lucide-react";
 
 import { ScreenType, Message, UserProfile } from "./types";
@@ -15,6 +15,7 @@ export default function App() {
   const [selectedBotId, setSelectedBotId] = useState<string>("nexus-7");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [userProfile, setUserProfile] = useState<UserProfile>(INITIAL_USER_PROFILE);
+  const [screenTransition, setScreenTransition] = useState(false);
 
   const [conversations, setConversations] = useState<Record<string, Message[]>>({
     "nexus-7": [
@@ -27,6 +28,15 @@ export default function App() {
     ]
   });
 
+  const switchScreen = (screen: ScreenType) => {
+    if (screen === currentScreen) return;
+    setScreenTransition(true);
+    setTimeout(() => {
+      setCurrentScreen(screen);
+      setScreenTransition(false);
+    }, 150);
+  };
+
   const handleSelectBot = (botId: string) => {
     setSelectedBotId(botId);
     if (!conversations[botId]) {
@@ -37,7 +47,7 @@ export default function App() {
         ]
       }));
     }
-    setCurrentScreen("chat");
+    switchScreen("chat");
   };
 
   const handleAddMessage = (botId: string, newMessage: Message) => {
@@ -70,7 +80,7 @@ export default function App() {
     setConversations(prev => ({
       ...prev,
       [botId]: [
-        { id: "init", role: "model", content: BOT_INITIAL_MESSAGES[botId] || "Hello! Hello again.", timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+        { id: "init", role: "model", content: BOT_INITIAL_MESSAGES[botId] || "Hello! How can I assist you today?", timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
       ]
     }));
   };
@@ -98,39 +108,43 @@ export default function App() {
     setUserProfile(INITIAL_USER_PROFILE);
   };
 
-  return (
-    <div className="bg-background text-on-surface font-sans min-h-screen relative flex flex-col justify-between">
+  const activeChatCount = Object.keys(conversations).filter(k => conversations[k].length > 0).length;
 
-      <header className="fixed top-0 left-0 w-full bg-surface/80 backdrop-blur-md z-50 border-b border-white/10 shadow-sm flex justify-between items-center px-6 py-3 h-16">
-        <div className="flex items-center gap-4">
+  return (
+    <div className="bg-background text-on-surface font-sans min-h-screen relative flex flex-col">
+      {/* Header */}
+      <header className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-xl z-50 border-b border-black/[0.06] flex justify-between items-center px-5 sm:px-6 py-3 h-16">
+        <div className="flex items-center gap-3">
           <button
-            className="text-primary hover:text-primary-container active:scale-95 transition-transform focus:outline-none cursor-pointer"
-            onClick={() => setCurrentScreen("discover")}
+            className="text-on-surface hover:text-on-surface-variant active:scale-95 transition-transform focus:outline-none cursor-pointer"
+            onClick={() => switchScreen("discover")}
           >
-            <Menu className="w-6 h-6" />
+            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+              <div className="w-3.5 h-3.5 border-2 border-white rounded-sm rotate-45" />
+            </div>
           </button>
-          <div className="flex items-center gap-2 cursor-pointer active:opacity-90 select-none" onClick={() => setCurrentScreen("discover")}>
-            <Sparkles className="w-5 h-5 text-primary" />
-            <h1 className="text-lg font-extrabold tracking-tight text-primary">
-              AI Navigator
+          <div className="flex items-center gap-2 cursor-pointer active:opacity-90 select-none group" onClick={() => switchScreen("discover")}>
+            <h1 className="text-lg font-extrabold tracking-tight text-on-surface group-hover:text-on-surface-variant transition-colors">
+              Cognitive Nexus
             </h1>
           </div>
         </div>
 
-        <div
-          onClick={() => setCurrentScreen("profile")}
-          className={`w-10 h-10 rounded-full overflow-hidden border-2 cursor-pointer transition-all ${
+        <button
+          onClick={() => switchScreen("profile")}
+          className={`w-10 h-10 rounded-full overflow-hidden border-2 cursor-pointer transition-all active:scale-95 ${
             currentScreen === "profile"
-              ? "border-primary ring-2 ring-primary-container/20"
-              : "border-primary/20 hover:border-primary/60"
+              ? "border-black ring-2 ring-black/10"
+              : "border-black/15 hover:border-black/40"
           }`}
           title="View profile"
         >
           <img alt="User avatar" className="w-full h-full object-cover" src={userProfile.avatarUrl} />
-        </div>
+        </button>
       </header>
 
-      <main className="pt-20 pb-28 px-6 max-w-[800px] w-full mx-auto flex-grow flex flex-col justify-start">
+      {/* Main content */}
+      <main className={`pt-20 pb-28 px-5 sm:px-6 max-w-[820px] w-full mx-auto flex-grow flex flex-col justify-start transition-all duration-300 ${screenTransition ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"}`}>
         {currentScreen === "discover" && (
           <DiscoverScreen
             onSelectBot={handleSelectBot}
@@ -144,7 +158,7 @@ export default function App() {
         {currentScreen === "chat" && (
           <ChatScreen
             botId={selectedBotId}
-            onBack={() => setCurrentScreen("discover")}
+            onBack={() => switchScreen("discover")}
             messages={conversations[selectedBotId] || []}
             onAddMessage={(msg) => handleAddMessage(selectedBotId, msg)}
             onClearHistory={() => handleClearHistory(selectedBotId)}
@@ -166,13 +180,14 @@ export default function App() {
         )}
       </main>
 
-      <nav className="fixed bottom-0 left-0 w-full z-40 bg-surface/85 backdrop-blur-lg border-t border-white/10 flex justify-around items-center px-4 pb-4 pt-2 shadow-2xl">
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 w-full z-40 bg-white/85 backdrop-blur-xl border-t border-black/[0.06] flex justify-around items-center px-4 pb-4 pt-2">
         <button
-          onClick={() => setCurrentScreen("discover")}
-          className={`flex flex-col items-center justify-center py-1 transition-all focus:outline-none cursor-pointer ${
+          onClick={() => switchScreen("discover")}
+          className={`flex flex-col items-center justify-center py-1.5 px-5 transition-all focus:outline-none cursor-pointer rounded-full ${
             currentScreen === "discover"
-              ? "bg-primary-container/20 text-primary px-5 rounded-full ring-1 ring-primary/25 font-bold"
-              : "text-on-surface-variant hover:text-primary"
+              ? "bg-black text-white font-bold"
+              : "text-on-surface-variant hover:text-on-surface"
           }`}
         >
           <Compass className="w-5 h-5 select-none" />
@@ -181,35 +196,31 @@ export default function App() {
 
         <button
           onClick={() => handleSelectBot(selectedBotId)}
-          className={`flex flex-col items-center justify-center py-1 transition-all focus:outline-none cursor-pointer ${
+          className={`flex flex-col items-center justify-center py-1.5 px-5 transition-all focus:outline-none cursor-pointer rounded-full relative ${
             currentScreen === "chat"
-              ? "bg-primary-container/20 text-primary px-5 rounded-full ring-1 ring-primary/25 font-bold"
-              : "text-on-surface-variant hover:text-primary"
+              ? "bg-black text-white font-bold"
+              : "text-on-surface-variant hover:text-on-surface"
           }`}
         >
           <MessageSquare className="w-5 h-5 select-none" />
           <span className="text-[10px] uppercase font-bold tracking-wider mt-1">Chats</span>
+          {activeChatCount > 0 && currentScreen !== "chat" && (
+            <span className="absolute top-0 right-3 w-2 h-2 bg-black rounded-full" />
+          )}
         </button>
 
         <button
-          onClick={() => setCurrentScreen("profile")}
-          className={`flex flex-col items-center justify-center py-1 transition-all focus:outline-none cursor-pointer ${
+          onClick={() => switchScreen("profile")}
+          className={`flex flex-col items-center justify-center py-1.5 px-5 transition-all focus:outline-none cursor-pointer rounded-full ${
             currentScreen === "profile"
-              ? "bg-primary-container/20 text-primary px-5 rounded-full ring-1 ring-primary/25 font-bold"
-              : "text-on-surface-variant hover:text-primary"
+              ? "bg-black text-white font-bold"
+              : "text-on-surface-variant hover:text-on-surface"
           }`}
         >
           <UserIcon className="w-5 h-5 select-none" />
           <span className="text-[10px] uppercase font-bold tracking-wider mt-1">Profile</span>
         </button>
       </nav>
-
-      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-        <div className="absolute top-[-15%] left-[-15%] w-[45%] h-[45%] bg-primary/10 blur-[140px] rounded-full"></div>
-        <div className="absolute bottom-[-15%] right-[-15%] w-[55%] h-[55%] bg-blue-500/15 blur-[160px] rounded-full"></div>
-        <div className="absolute top-[40%] right-[10%] w-[30%] h-[30%] bg-cyan-500/8 blur-[120px] rounded-full"></div>
-      </div>
-
     </div>
   );
 }
