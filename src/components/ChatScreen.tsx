@@ -104,7 +104,16 @@ export default function ChatScreen({
       onAddMessage(botMsg);
     } catch (err: any) {
       console.error(err);
-      setErrorMessage(err.message || "Network Timeout. Please verify that your Gemini API Key is configured correctly.");
+      let displayMsg = "Unable to reach the AI service. Please try again in a moment.";
+      if (err?.message) {
+        try {
+          const parsed = JSON.parse(err.message);
+          displayMsg = parsed?.error?.message || err.message;
+        } catch {
+          displayMsg = err.message;
+        }
+      }
+      setErrorMessage(displayMsg);
     } finally {
       setIsThinking(false);
     }

@@ -73,7 +73,7 @@ async function startServer() {
       }));
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.0-flash",
         contents,
         config: {
           systemInstruction: instruction,
@@ -81,7 +81,28 @@ async function startServer() {
         },
       });
 
-      const responseText = response.text || "No response received from the system.";
+      let responseText = "";
+      try {
+        const candidates = (response as any).candidates;
+        if (candidates && candidates.length > 0) {
+          const parts = candidates[0].content?.parts;
+          if (parts && parts.length > 0) {
+            responseText = parts.map((p: any) => p.text || "").join("");
+          }
+        }
+      } catch {
+        // fall through to response.text
+      }
+      if (!responseText) {
+        try {
+          responseText = response.text || "";
+        } catch {
+          responseText = "";
+        }
+      }
+      if (!responseText) {
+        responseText = "No response received from the system. Please try again.";
+      }
 
       return res.json({
         content: responseText,
@@ -89,9 +110,16 @@ async function startServer() {
       });
     } catch (error: any) {
       console.error("Gemini API Error:", error);
-      return res.status(500).json({
-        error: error.message || "An error occurred while communicating with the AI model.",
-      });
+      let errorMsg = "An error occurred while communicating with the AI model.";
+      if (error?.message) {
+        try {
+          const parsed = JSON.parse(error.message);
+          errorMsg = parsed?.error?.message || errorMsg;
+        } catch {
+          errorMsg = error.message;
+        }
+      }
+      return res.status(500).json({ error: errorMsg });
     }
   });
 
