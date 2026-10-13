@@ -1,23 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
-import { 
-  ArrowLeft, 
-  MoreVertical, 
-  Plus, 
-  Send, 
-  ShieldAlert, 
-  ShieldCheck, 
-  Zap, 
-  Bolt, 
-  Palette, 
-  Terminal, 
-  Sigma, 
-  BookOpen, 
-  Dumbbell, 
-  Bug, 
-  Sparkles 
+import {
+  ArrowLeft,
+  MoreVertical,
+  Plus,
+  Send,
+  ShieldAlert,
+  ShieldCheck,
+  Zap,
+  Bolt,
+  Palette,
+  Terminal,
+  Sigma,
+  BookOpen,
+  Dumbbell,
+  Bug,
+  Sparkles
 } from "lucide-react";
-import { Bot, Message } from "../types";
-import { BOTS, INSTANT_SUGGESTIONS, BOT_INITIAL_MESSAGES } from "../data";
+import { Message } from "../types";
+import { BOTS, INSTANT_SUGGESTIONS } from "../data";
 
 interface ChatScreenProps {
   botId: string;
@@ -66,7 +66,7 @@ export default function ChatScreen({
     const minutes = d.getMinutes();
     const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12;
     const minutesStr = minutes < 10 ? "0" + minutes : minutes;
     return `${hours}:${minutesStr} ${ampm}`;
   };
@@ -74,7 +74,6 @@ export default function ChatScreen({
   const handleSendMessage = async (text: string) => {
     if (!text.trim()) return;
 
-    // Create and append user message
     const userMsg: Message = {
       id: Math.random().toString(36).substring(7),
       role: "user",
@@ -87,8 +86,6 @@ export default function ChatScreen({
     setErrorMessage("");
 
     try {
-      // Gather modern context array for the specific session history matching the backend's req.body payload structure.
-      // Filter out temporary placeholders if any.
       const chatPayload = [...messages, userMsg].map((m) => ({
         role: m.role,
         content: m.content,
@@ -112,7 +109,6 @@ export default function ChatScreen({
 
       const responseData = await res.json();
 
-      // Model response received
       const botMsg: Message = {
         id: Math.random().toString(36).substring(7),
         role: "model",
@@ -134,38 +130,27 @@ export default function ChatScreen({
     }
   };
 
-  // Safe preset url representation corresponding closely to structural imagery in the design specification document.
-  const getAvatarUrl = () => {
-    if (currentBot.id === "nexus-7") {
-      return "https://lh3.googleusercontent.com/aida-public/AB6AXuCgqSx3r9HeNmeMX_YtcLmVYKiiGIb5u4BkasO5XvTpSnu2HkyUNw7_AVSzHU9q3WB06AzGG4hKWOcICbvJ9Lvj1qIJb8qC-oIXwDs1ZiXBrS6kO6c0GaaMMz44BGBuw7okKnopLJF7Kkf85SRMCjzu1vY4f-ZoIwoJVJHkDM2SCABepLRB4LVupozxam2cOyI7B7GlxXGZtQJ5By-se0b7X6c9LPCt_a3qF6cLt5t4L8s0ZiCNBmGSahnRJPBN27ny4OTIyKB05X7u";
-    } else if (currentBot.id === "creative-muse") {
-      return "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80";
-    } else {
-      return "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=150&auto=format&fit=crop&q=80";
-    }
-  };
-
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] md:h-[calc(100vh-100px)] text-on-surface font-sans select-none overflow-hidden relative">
-      
+
       {/* Header element mirroring the design exactly */}
       <div className="flex justify-between items-center py-3 border-b border-white/10 z-10 bg-background/95 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={onBack}
             className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-white/5 transition-all rounded-full cursor-pointer focus:outline-none"
             title="Go back"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          
+
           <div className="relative">
             <div className={`w-10 h-10 rounded-full border border-primary/30 object-cover overflow-hidden flex items-center justify-center ${currentBot.avatarBg} ${currentBot.iconColor}`}>
               {getBotIcon(currentBot.icon)}
             </div>
             <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background animate-pulse"></div>
           </div>
-          
+
           <div className="flex flex-col">
             <span className="font-sans text-sm font-bold text-on-surface leading-tight">{currentBot.name}</span>
             <span className="font-sans text-[10px] text-green-500 font-semibold tracking-wider uppercase">ONLINE</span>
@@ -174,7 +159,7 @@ export default function ChatScreen({
 
         <div className="flex items-center gap-1">
           {onClearHistory && (
-            <button 
+            <button
               onClick={onClearHistory}
               className="text-xs px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-on-surface-variant hover:text-primary transition-all cursor-pointer mr-1"
             >
@@ -192,19 +177,19 @@ export default function ChatScreen({
         {messages.map((msg) => {
           const isModel = msg.role === "model";
           return (
-            <div 
-              key={msg.id} 
+            <div
+              key={msg.id}
               className={`flex flex-col w-full ${isModel ? "items-start" : "items-end"}`}
             >
               <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm relative overflow-hidden ${
-                isModel 
-                  ? "glass-bubble ai-glow rounded-bl-none text-on-surface" 
+                isModel
+                  ? "glass-bubble ai-glow rounded-bl-none text-on-surface"
                   : "bg-primary-container/20 border border-primary-container/30 backdrop-blur-md rounded-br-none text-on-surface"
               }`}>
                 {isModel && (
                   <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary/30 via-primary to-primary/30"></div>
                 )}
-                
+
                 {/* Message Body with markdown friendly layouts */}
                 <div className="font-sans text-sm leading-relaxed whitespace-pre-wrap selection:bg-primary/45">
                   {msg.content}
@@ -277,7 +262,7 @@ export default function ChatScreen({
       <div className="pt-2 pb-4 bg-background z-10">
         <div className="relative">
           <div className="glass-bubble rounded-full p-1.5 pl-3 pr-1.5 flex items-center gap-2 shadow-xl ring-1 ring-white/10">
-            <button 
+            <button
               className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors rounded-full focus:outline-none"
               title="Add media"
             >

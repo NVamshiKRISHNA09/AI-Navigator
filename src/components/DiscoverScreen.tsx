@@ -1,47 +1,40 @@
-import React, { useState } from "react";
-import { 
-  Search, 
-  SlidersHorizontal, 
-  Bolt, 
-  Palette, 
-  Terminal, 
-  Sigma, 
-  BookOpen, 
-  Dumbbell, 
-  Bug, 
-  Sparkles, 
-  Compass, 
-  MessageSquare, 
-  User as UserIcon,
-  ChevronRight
+import React, { useState, useRef } from "react";
+import {
+  Search,
+  SlidersHorizontal,
+  Bolt,
+  Palette,
+  Terminal,
+  Sigma,
+  BookOpen,
+  Dumbbell,
+  Bug,
+  Sparkles,
 } from "lucide-react";
-import { Bot, ScreenType } from "../types";
 import { BOTS } from "../data";
 
 interface DiscoverScreenProps {
   onSelectBot: (botId: string) => void;
-  onNavigate: (screen: ScreenType) => void;
   searchTerm: string;
   setSearchTerm: (val: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (val: string) => void;
 }
 
 export default function DiscoverScreen({
   onSelectBot,
-  onNavigate,
   searchTerm,
   setSearchTerm,
-  selectedCategory,
-  setSelectedCategory,
 }: DiscoverScreenProps) {
   const [activeCategory, setActiveCategory] = useState<string>("All");
+  const allBotsRef = useRef<HTMLDivElement>(null);
 
   const categories = ["All", "Productivity", "Creative", "Coding", "Math", "Lifestyle"];
 
   const handleCategoryClick = (category: string) => {
     setActiveCategory(category);
-    setSelectedCategory(category);
+  };
+
+  const handleSeeAll = () => {
+    allBotsRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const getBotIcon = (iconName: string) => {
@@ -60,7 +53,7 @@ export default function DiscoverScreen({
   // Filter bots by category & search term
   const filteredBots = BOTS.filter((bot) => {
     const matchesCategory = activeCategory === "All" || bot.category === activeCategory;
-    const matchesSearch = bot.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const matchesSearch = bot.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           bot.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
@@ -69,7 +62,7 @@ export default function DiscoverScreen({
 
   return (
     <div className="text-on-surface font-sans selection:bg-primary/30 min-h-screen pb-28">
-      
+
       {/* Search Bar Section */}
       <section className="mt-4">
         <div className="glass-card rounded-full p-2 flex items-center gap-2 group focus-within:ring-2 focus-within:ring-primary/50 transition-all duration-300">
@@ -77,13 +70,13 @@ export default function DiscoverScreen({
             <Search className="w-5 h-5" />
           </div>
           <input
-            className="bg-transparent border-none focus:outline-none focus:ring-0 flex-grow text-body-md placeholder:text-on-surface-variant/50 font-sans"
+            className="bg-transparent border-none focus:outline-none focus:ring-0 flex-grow text-sm placeholder:text-on-surface-variant/50 font-sans"
             placeholder="Search chatbots..."
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button 
+          <button
             className="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors focus:outline-none"
             title="Filters"
           >
@@ -116,7 +109,12 @@ export default function DiscoverScreen({
         <section className="mt-10">
           <div className="flex justify-between items-end mb-4">
             <h2 className="font-sans text-xl font-bold text-on-surface tracking-tight">Trending Now</h2>
-            <button className="text-primary font-semibold text-xs hover:underline cursor-pointer">See All</button>
+            <button
+              onClick={handleSeeAll}
+              className="text-primary font-semibold text-xs hover:underline cursor-pointer"
+            >
+              See All
+            </button>
           </div>
           <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-4 px-4">
             {trendingBots.map((bot) => (
@@ -124,8 +122,8 @@ export default function DiscoverScreen({
                 key={bot.id}
                 onClick={() => onSelectBot(bot.id)}
                 className={`min-w-[280px] md:min-w-[320px] glass-card rounded-xl p-5 border-t-2 ${
-                  bot.id === "creative-muse" 
-                    ? "border-t-[#10a37f]" 
+                  bot.id === "creative-muse"
+                    ? "border-t-[#10a37f]"
                     : bot.id === "dev-bot-x"
                     ? "border-t-[#3b82f6]"
                     : "border-t-primary"
@@ -160,17 +158,17 @@ export default function DiscoverScreen({
       )}
 
       {/* All Chatbots List */}
-      <section className="mt-10">
+      <section ref={allBotsRef} className="mt-10 scroll-mt-20">
         <h2 className="font-sans text-xl font-bold text-on-surface tracking-tight mb-6">
           {searchTerm || activeCategory !== "All" ? "Filtered AI Assistants" : "All Chatbots"}
         </h2>
-        
+
         {filteredBots.length === 0 ? (
           <div className="glass-card rounded-2xl p-8 text-center text-on-surface-variant">
             <Sparkles className="w-10 h-10 mx-auto text-primary/40 mb-3 animate-pulse" />
-            <p className="text-body-md font-sans">No cognitive models matched your request.</p>
-            <button 
-              onClick={() => { setSearchTerm(""); setActiveCategory("All"); setSelectedCategory("All"); }}
+            <p className="text-sm font-sans">No cognitive models matched your request.</p>
+            <button
+              onClick={() => { setSearchTerm(""); setActiveCategory("All"); }}
               className="mt-4 px-4 py-2 bg-primary/15 text-primary rounded-lg text-xs font-semibold hover:bg-primary/25 cursor-pointer"
             >
               Reset Filters
